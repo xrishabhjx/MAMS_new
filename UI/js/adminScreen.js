@@ -100,4 +100,23 @@ function pyCam(){
     });
 }
 
+function startAudioCapture() {
+    const { spawn } = require('child_process');
+    // Start the audio capture script (runs in background)
+    const python = spawn('python', ['py/voicecap.py']);
+
+    python.stdout.on('data', function(data){
+        console.log("Audio:", data.toString('utf8'));
+        M.toast({html: data.toString('utf8')});
+    });
+
+    python.stderr.on('data', function(data){
+        console.error("Audio error:", data.toString('utf8'));
+    });
+
+    python.on('close', function(code){
+        console.log('Audio capture script exited with code', code);
+    });
+}
+
 console.log("adminScreen.js ready");
